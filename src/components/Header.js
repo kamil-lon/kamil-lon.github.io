@@ -1,7 +1,8 @@
 import React from 'react'
+import './Header.css'
 
 const Header = () => (
-    <h1>game2</h1>
+    <div className="header">Julitka</div>
 )
 
 export default Header;
