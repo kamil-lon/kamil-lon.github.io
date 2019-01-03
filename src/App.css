@@ -1,7 +1,8 @@
 * {
-  background: #13004d
+  background: #13004d;
+  color: #fff;
 }
 
-.layout{
-    width: 100vh;
+.layout {
+  width: 100vh;
 }

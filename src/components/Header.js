@@ -1,8 +1,6 @@
-import React from 'react'
-import './Header.css'
+import React from "react"
+import "./Header.css"
 
-const Header = () => (
-    <div className="header">Julitka</div>
-)
+const Header = () => <div className='header'>game2</div>
 
-export default Header;
+export default Header
