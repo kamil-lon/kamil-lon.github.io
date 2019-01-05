@@ -10,4 +10,12 @@ export const cutLife = {
   type: "CUT_LIFE",
 }
 
-export default { resetTime, decrementTime, cutLife }
+export const addPoint = {
+  type: "ADD_POINT",
+}
+
+export const resetGame = {
+  type: "RESET_GAME",
+}
+
+export default { resetTime, decrementTime, cutLife, addPoint, resetGame }

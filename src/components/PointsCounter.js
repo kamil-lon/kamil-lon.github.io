@@ -1,5 +1,10 @@
-import React from 'react'
+import React from "react"
+import { connect } from "react-redux"
 
-const PointsCounter = ({points}) => (<div>{points}</div>)
+const PointsCounter = ({ points }) => <div>{points}</div>
 
-export default PointsCounter
+const mapState = state => ({
+  points: state.points,
+})
+
+export default connect(mapState)(PointsCounter)

@@ -11,7 +11,7 @@ class Timer extends React.Component {
   }
 
   componentDidMount() {
-    const clock = setInterval(() => {
+    setInterval(() => {
       const {
         lifes,
         time,
@@ -20,13 +20,13 @@ class Timer extends React.Component {
         onCutLife,
       } = this.props
 
-      if (lifes === 0) clearInterval(clock)
-
-      if (time > 1) {
-        onDecrementTime()
-      } else {
-        onCutLife()
-        onResetTime()
+      if (lifes !== 0) {
+        if (time > 1) {
+          onDecrementTime()
+        } else {
+          onCutLife()
+          onResetTime()
+        }
       }
     }, 1000)
   }
