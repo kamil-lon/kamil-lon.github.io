@@ -1,5 +1,6 @@
 import React from "react"
 import "./LifesCounter.css"
+import { connect } from "react-redux"
 
 const LifesCounter = ({ lifes }) => (
   <div className='lifes'>
@@ -7,4 +8,8 @@ const LifesCounter = ({ lifes }) => (
   </div>
 )
 
-export default LifesCounter
+const mapStateToProps = state => ({
+  lifes: state.lifes,
+})
+
+export default connect(mapStateToProps)(LifesCounter)

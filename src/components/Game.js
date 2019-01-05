@@ -1,13 +1,15 @@
 import React from "react"
 import PointsCounter from "./PointsCounter"
 import LifesCounter from "./LifesCounter"
+import Timer from "./Timer"
+import { connect } from "react-redux"
+import * as actions from "../store/game/actions"
 
 class Game extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       points: 0,
-      lifes: 3,
     }
   }
   render() {
@@ -15,8 +17,9 @@ class Game extends React.Component {
     return (
       <div>
         <PointsCounter points={this.state.points} />
-        <LifesCounter lifes={this.state.lifes} />
-        {this.state.lifes ? (
+        <LifesCounter />
+        <Timer />
+        {this.props.lifes ? (
           <>
             <h2>{question}</h2>
             <div>
@@ -29,16 +32,42 @@ class Game extends React.Component {
             </div>
           </>
         ) : (
-          "OD NOWA"
+          <button onClick={this.startNewGame}>"OD NOWA"</button>
         )}
       </div>
     )
   }
 
-  handleClick = answer =>
+  handleClick = answer => {
     answer === this.props.correctAnswer
       ? this.setState({ points: this.state.points + 1 })
       : this.setState({ lifes: this.state.lifes - 1 })
+    this.props.getNewQuestion()
+    this.props.onResetTime()
+  }
+
+  startNewGame = () => {
+    this.setState({
+      points: 0,
+    })
+  }
+
+  cutLife = () => {
+    this.setState({ lifes: this.state.lifes - 1 })
+  }
 }
 
-export default Game
+const mapStateToProps = state => ({
+  lifes: state.lifes,
+})
+
+const mapDispatchToProps = dispatch => ({
+  onResetTime: () => {
+    dispatch(actions.resetTime)
+  },
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Game)
