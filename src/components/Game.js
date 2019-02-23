@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import PointsCounter from './PointsCounter';
-import LifesCounter from './LifesCounter';
-import Timer from './Timer';
-import { connect } from 'react-redux';
-import * as actions from '../store/game/actions';
-import './Game.css';
+import React, { useState } from "react"
+import PointsCounter from "./PointsCounter"
+import LifesCounter from "./LifesCounter"
+import Timer from "./Timer"
+import { connect } from "react-redux"
+import * as actions from "../store/game/actions"
+import "./Game.css"
 
 function Game({
   lifes,
@@ -13,30 +13,30 @@ function Game({
   getNewQuestion,
   onAddQuestion,
   onAddPoint,
-  question
+  question,
 }) {
-  const [propose, setPropose] = useState({});
+  const [propose, setPropose] = useState({})
 
   function handleContentChange(e) {
-    setPropose({ ...propose, content: e.target.value });
+    setPropose({ ...propose, content: e.target.value })
   }
 
   function handleAnsAChange(e) {
-    setPropose({ ...propose, ansA: e.target.value, corr: e.target.value });
+    setPropose({ ...propose, ansA: e.target.value, corr: e.target.value })
   }
 
   function handleAnsBChange(e) {
-    setPropose({ ...propose, ansB: e.target.value });
+    setPropose({ ...propose, ansB: e.target.value })
   }
 
   function handleAdd() {
-    onAddQuestion(propose);
-    setPropose({});
+    onAddQuestion(propose)
+    setPropose({ content: "", ansA: "", ansB: "" })
   }
 
   function handleClick(answer) {
-    answer === question.corr ? onAddPoint() : onCutLife();
-    getNewQuestion();
+    answer === question.corr ? onAddPoint() : onCutLife()
+    getNewQuestion()
   }
 
   return (
@@ -59,40 +59,40 @@ function Game({
       ) : (
         <button onClick={onResetGame}>OD NOWA</button>
       )}
-      <div className="addForm">
-        Pytanie:{' '}
+      <div className='addForm'>
+        Pytanie:{" "}
         <input value={propose.content} onChange={handleContentChange} />
-        Prawidłowa odpowiedź:{' '}
+        Prawidłowa odpowiedź:{" "}
         <input value={propose.ansA} onChange={handleAnsAChange} />
-        Błędna odpowiedź:{' '}
+        Błędna odpowiedź:{" "}
         <input value={propose.ansB} onChange={handleAnsBChange} />
         <button onClick={handleAdd}>DODAJ</button>
       </div>
     </div>
-  );
+  )
 }
 
 const mapStateToProps = state => ({
   lifes: state.game.lifes,
-  points: state.game.points
-});
+  points: state.game.points,
+})
 
 const mapDispatchToProps = dispatch => ({
   onCutLife: () => {
-    dispatch(actions.cutLife);
+    dispatch(actions.cutLife)
   },
   onAddPoint: () => {
-    dispatch(actions.addPoint);
+    dispatch(actions.addPoint)
   },
   onResetGame: () => {
-    dispatch(actions.resetGame);
+    dispatch(actions.resetGame)
   },
   onAddQuestion: question => {
-    dispatch(actions.addQuestion(question));
-  }
-});
+    dispatch(actions.addQuestion(question))
+  },
+})
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Game);
+)(Game)
