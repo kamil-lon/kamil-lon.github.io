@@ -1,57 +1,42 @@
-import React from "react"
-import { connect } from "react-redux"
-import * as actions from "../store/game/actions"
+import React, { useState, useEffect, useRef } from 'react';
+import { connect } from 'react-redux';
+import * as actions from '../store/game/actions';
 
-class Timer extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      time: 9,
-    }
-  }
+function Timer(props) {
+  const [time, setTime] = useState(10);
 
-  componentDidMount() {
-    setInterval(() => {
-      const {
-        lifes,
-        time,
-        onDecrementTime,
-        onResetTime,
-        onCutLife,
-      } = this.props
+  const savedCallback = useRef();
+  useEffect(() => {
+    savedCallback.current = () => {
+      setTime(time - 1);
+    };
+  }, [time]);
 
-      if (lifes !== 0) {
-        if (time > 1) {
-          onDecrementTime()
-        } else {
-          onCutLife()
-          onResetTime()
-        }
-      }
-    }, 1000)
-  }
+  useEffect(() => {
+    setTime(10);
+    let interval = setInterval(() => savedCallback.current(), 1000);
+    return () => clearInterval(interval);
+  }, [props.lifes, props.points]);
 
-  render = () => <p>{this.props.time}</p>
+  useEffect(() => {
+    if (time === 0) props.onCutLife();
+  }, [time]);
+
+  return <p>{time}</p>;
 }
 
 const mapStateToProps = state => ({
-  time: state.time,
-  lifes: state.lifes,
-})
+  points: state.game.points,
+  lifes: state.game.lifes
+});
 
 const mapDispatchToProps = dispatch => ({
-  onResetTime: () => {
-    dispatch(actions.resetTime)
-  },
-  onDecrementTime: () => {
-    dispatch(actions.decrementTime)
-  },
   onCutLife: () => {
-    dispatch(actions.cutLife)
-  },
-})
+    dispatch(actions.cutLife);
+  }
+});
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Timer)
+)(Timer);

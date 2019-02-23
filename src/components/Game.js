@@ -1,78 +1,98 @@
-import React from "react"
-import PointsCounter from "./PointsCounter"
-import LifesCounter from "./LifesCounter"
-import Timer from "./Timer"
-import { connect } from "react-redux"
-import * as actions from "../store/game/actions"
+import React, { useState } from 'react';
+import PointsCounter from './PointsCounter';
+import LifesCounter from './LifesCounter';
+import Timer from './Timer';
+import { connect } from 'react-redux';
+import * as actions from '../store/game/actions';
+import './Game.css';
 
-class Game extends React.Component {
-  render() {
-    const {
-      question,
-      firstAnswer,
-      secondAnswer,
-      lifes,
-      onResetGame,
-    } = this.props
-    return (
-      <div>
-        <PointsCounter />
-        <LifesCounter />
-        <Timer />
-        {lifes ? (
-          <>
-            <h2>{question}</h2>
-            <div>
-              <button onClick={() => this.handleClick(firstAnswer)}>
-                {firstAnswer}
-              </button>
-              <button onClick={() => this.handleClick(secondAnswer)}>
-                {secondAnswer}
-              </button>
-            </div>
-          </>
-        ) : (
-          <button onClick={onResetGame}>"OD NOWA"</button>
-        )}
+function Game({
+  lifes,
+  onResetGame,
+  onCutLife,
+  getNewQuestion,
+  onAddQuestion,
+  onAddPoint,
+  question
+}) {
+  const [propose, setPropose] = useState({});
+
+  function handleContentChange(e) {
+    setPropose({ ...propose, content: e.target.value });
+  }
+
+  function handleAnsAChange(e) {
+    setPropose({ ...propose, ansA: e.target.value, corr: e.target.value });
+  }
+
+  function handleAnsBChange(e) {
+    setPropose({ ...propose, ansB: e.target.value });
+  }
+
+  function handleAdd() {
+    onAddQuestion(propose);
+    setPropose({});
+  }
+
+  function handleClick(answer) {
+    answer === question.corr ? onAddPoint() : onCutLife();
+    getNewQuestion();
+  }
+
+  return (
+    <div>
+      <PointsCounter />
+      <LifesCounter />
+      {lifes > 0 && <Timer />}
+      {lifes > 0 ? (
+        <>
+          <h2>{question.content}</h2>
+          <div>
+            <button onClick={() => handleClick(question.ansA)}>
+              {question.ansA}
+            </button>
+            <button onClick={() => handleClick(question.ansB)}>
+              {question.ansB}
+            </button>
+          </div>
+        </>
+      ) : (
+        <button onClick={onResetGame}>OD NOWA</button>
+      )}
+      <div className="addForm">
+        Pytanie:{' '}
+        <input value={propose.content} onChange={handleContentChange} />
+        Prawidłowa odpowiedź:{' '}
+        <input value={propose.ansA} onChange={handleAnsAChange} />
+        Błędna odpowiedź:{' '}
+        <input value={propose.ansB} onChange={handleAnsBChange} />
+        <button onClick={handleAdd}>DODAJ</button>
       </div>
-    )
-  }
-
-  handleClick = answer => {
-    const {
-      correctAnswer,
-      onAddPoint,
-      onCutLife,
-      getNewQuestion,
-      onResetTime,
-    } = this.props
-    answer === correctAnswer ? onAddPoint() : onCutLife()
-    getNewQuestion()
-    onResetTime()
-  }
+    </div>
+  );
 }
 
 const mapStateToProps = state => ({
-  lifes: state.lifes,
-  points: state.points,
-})
+  lifes: state.game.lifes,
+  points: state.game.points
+});
 
 const mapDispatchToProps = dispatch => ({
-  onResetTime: () => {
-    dispatch(actions.resetTime)
-  },
   onCutLife: () => {
-    dispatch(actions.cutLife)
+    dispatch(actions.cutLife);
   },
   onAddPoint: () => {
-    dispatch(actions.addPoint)
+    dispatch(actions.addPoint);
   },
   onResetGame: () => {
-    dispatch(actions.resetGame)
+    dispatch(actions.resetGame);
   },
-})
+  onAddQuestion: question => {
+    dispatch(actions.addQuestion(question));
+  }
+});
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Game)
+)(Game);
